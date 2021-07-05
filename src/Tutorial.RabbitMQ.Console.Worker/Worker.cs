@@ -22,6 +22,8 @@ namespace Tutorial.RabbitMQ.Console.Worker
                                      autoDelete: false,
                                      arguments: null);
 
+                channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+
                 System.Console.WriteLine($"{DateTime.Now}: Waiting for messages.");
 
                 var consumer = new EventingBasicConsumer(channel);
