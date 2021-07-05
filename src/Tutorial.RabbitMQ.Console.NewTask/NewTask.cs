@@ -1,4 +1,5 @@
 ﻿using RabbitMQ.Client;
+using System;
 using System.Text;
 
 namespace Tutorial.RabbitMQ.Console.NewTask
@@ -13,7 +14,11 @@ namespace Tutorial.RabbitMQ.Console.NewTask
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queueName, false, false, false, null);
+                channel.QueueDeclare(queue: queueName,
+                                     durable: false,
+                                     exclusive: false,
+                                     autoDelete: false,
+                                     arguments: null);
 
                 string message = GetMessage(args);
                 var body = Encoding.UTF8.GetBytes(message);
@@ -21,12 +26,15 @@ namespace Tutorial.RabbitMQ.Console.NewTask
                 var properties = channel.CreateBasicProperties();
                 properties.Persistent = true;
 
-                channel.BasicPublish(string.Empty, queueName, properties, body);
+                channel.BasicPublish(exchange: string.Empty,
+                                     routingKey: queueName,
+                                     basicProperties: properties,
+                                     body: body);
 
-                System.Console.WriteLine($" [x] Sent '{message}'");
+                System.Console.WriteLine($"{DateTime.Now}: Sent '{message}'");
             }
 
-            System.Console.WriteLine($" Press [enter] to exit.");
+            System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
             System.Console.ReadLine();
         }
 

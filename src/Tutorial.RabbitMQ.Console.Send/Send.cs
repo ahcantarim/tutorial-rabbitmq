@@ -14,17 +14,24 @@ namespace Tutorial.RabbitMQ.Console.Send
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queueName, false, false, false, null);
+                channel.QueueDeclare(queue: queueName, 
+                                     durable: false, 
+                                     exclusive: false, 
+                                     autoDelete: false, 
+                                     arguments: null);
 
-                string message = $"Hello World at {DateTime.Now}!";
+                string message = $"{DateTime.Now}: Hello World!";
                 var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(string.Empty, queueName, null, body);
+                channel.BasicPublish(exchange: string.Empty, 
+                                     routingKey: queueName,
+                                     basicProperties: null, 
+                                     body: body);
 
-                System.Console.WriteLine($" [x] Sent '{message}'");
+                System.Console.WriteLine($"{DateTime.Now}: Sent '{message}'");
             }
 
-            System.Console.WriteLine($" Press [enter] to exit.");
+            System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
             System.Console.ReadLine();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System;
 using System.Text;
 
 namespace Tutorial.RabbitMQ.Console.Receive
@@ -14,14 +15,20 @@ namespace Tutorial.RabbitMQ.Console.Receive
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queueName, false, false, false, null);
+                channel.QueueDeclare(queue: queueName, 
+                                     durable: false, 
+                                     exclusive: false, 
+                                     autoDelete: false, 
+                                     arguments: null);
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += Consumer_Received;
 
-                channel.BasicConsume(queueName, true, consumer);
+                channel.BasicConsume(queue: queueName, 
+                                     autoAck: true, 
+                                     consumer: consumer);
 
-                System.Console.WriteLine(" Press [enter] to exit.");
+                System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
                 System.Console.ReadLine();
             }
         }
@@ -31,7 +38,7 @@ namespace Tutorial.RabbitMQ.Console.Receive
             var body = e.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
 
-            System.Console.WriteLine($" [x] Received '{message}'");
+            System.Console.WriteLine($"{DateTime.Now}: Received '{message}'");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System;
 using System.Text;
 using System.Threading;
 
@@ -15,16 +16,22 @@ namespace Tutorial.RabbitMQ.Console.Worker
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queueName, false, false, false, null);
+                channel.QueueDeclare(queue: queueName,
+                                     durable: false,
+                                     exclusive: false,
+                                     autoDelete: false,
+                                     arguments: null);
 
-                System.Console.WriteLine($" [*] Waiting for messages.");
+                System.Console.WriteLine($"{DateTime.Now}: Waiting for messages.");
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += Consumer_Received;
 
-                channel.BasicConsume(queueName, true, consumer);
+                channel.BasicConsume(queue: queueName,
+                                     autoAck: true,
+                                     consumer: consumer);
 
-                System.Console.WriteLine(" Press [enter] to exit.");
+                System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
                 System.Console.ReadLine();
             }
         }
@@ -34,12 +41,12 @@ namespace Tutorial.RabbitMQ.Console.Worker
             var body = e.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
 
-            System.Console.WriteLine($" [x] Received '{message}'");
+            System.Console.WriteLine($"{DateTime.Now}: Received '{message}'");
 
             int dots = message.Split('.').Length - 1;
             Thread.Sleep(dots * 1000);
 
-            System.Console.WriteLine($" [x] Done.");
+            System.Console.WriteLine($"{DateTime.Now}: Done.");
         }
     }
 }
