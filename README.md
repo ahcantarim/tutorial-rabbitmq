@@ -20,3 +20,9 @@ Como não temos uma tarefa do mundo real para executar, como redimensionar image
 
 - `Tutorial.RabbitMQ.Console.Worker`: console para ler mensagens de uma fila simulando um processamento para cada mensagem; pode ser executada mais de uma instância e as mensagens serão lidas alternadamente por cada uma;
 
+Também foi alterado o valor do parâmetro `autoAck: false` no canal que consome a fila, visando realizar manualmente a confirmação/rejeição da mensagem recebida.
+
+No manipulador de eventos de mensagem recebida, foi implementado o código para confirmar manualmente o processamento da mensagem (`channel.BasicAck()`), após o término da mesma.
+
+Usando esse código nós podemos ter certeza que mesmo que um `Consumer` seja finalizado no meio do processamento de uma mensagem, nada será perdido. Logo que isso ocorrer, todas as mensagens não confirmadas serão reenviadas para outros `Consumers`.
+

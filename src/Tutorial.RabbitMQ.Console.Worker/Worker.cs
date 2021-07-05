@@ -27,8 +27,9 @@ namespace Tutorial.RabbitMQ.Console.Worker
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += Consumer_Received;
 
+                // Nota: o valor do parâmetro `autoAck` foi alterado para `false`, visando realizar manualmente a confirmação/rejeição da mensagem recebida.
                 channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
+                                     autoAck: false,
                                      consumer: consumer);
 
                 System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
@@ -47,6 +48,10 @@ namespace Tutorial.RabbitMQ.Console.Worker
             Thread.Sleep(dots * 1000);
 
             System.Console.WriteLine($"{DateTime.Now}: Done.");
+
+            // Nota: é possível acessar o canal aqui através do `((EventingBasicConsumer)sender).Model`.
+            var channel = ((EventingBasicConsumer)sender).Model;
+            channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
         }
     }
 }
