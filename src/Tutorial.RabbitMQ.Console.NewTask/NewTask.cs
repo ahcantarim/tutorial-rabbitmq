@@ -9,13 +9,13 @@ namespace Tutorial.RabbitMQ.Console.NewTask
         static void Main(string[] args)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
-            var queueName = "task_queue";
+            var queueName = "task_queue_durable";
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: queueName,
-                                     durable: false,
+                                     durable: true,
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);
