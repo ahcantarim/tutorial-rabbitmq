@@ -101,4 +101,36 @@ channel.BasicQos(0, 1, false);
 > Você deve ficar de olho nisso, e talvez adicionar mais workers, ou ter alguma outra estratégia.
 
 
-x
+# Tutorial 3
+
+[Publish/Subscribe](https://www.rabbitmq.com/tutorials/tutorial-three-dotnet.html)
+
+No tutorial anterior foi criada uma fila de trabalho. Assume-se através de uma fila de trabalho que cada tarefa é entregue a exatamente um *worker*.
+
+Agora será feito algo completamente diferente -- iremos entregar uma mesma mensagem a múltiplos `Consumers`.
+
+Para ilustrar este padrão, foi criado um sistema de *log* simples. Consiste em dois programas -- o primeiro envia as mensagens de log e o segundo recebe e exibe as mesmas.
+
+- `Tutorial.RabbitMQ.Console.EmitLog`: console para transmitir mensagens a uma *Exchange*;
+
+- `Tutorial.RabbitMQ.Console.ReceiveLogs`: console para receber mensagens de uma *Exchange*;
+
+Nesse sistema de *log*, cada cópia do `Consumer` que estiver sendo executada irá receber as mensagens. Assim, pode-se executar um receptor e direcionar os logs para o disco rígido (arquivo); e ao mesmo tempo pode-se executar outro receptor e visualizar os logs em tela.
+
+Essencialmente, as mensagens publicadas serão transmitidas para todos os receptores.
+
+###### Exchanges
+
+Até aqui, enviamos e recebemos mensagens de e para uma fila. Agora introduziremos o conceito do modelo completo de mensageria com **RabbitMQ**.
+
+A ideia principal do modelo de mensagens no **RabbitMQ** é que um `Producer` nunca envia nenhuma mensagem diretamente para uma fila. Na verdade, geralmente um `Producer` sequer sabe se uma mensagem será enviada para alguma fila.
+
+Ao invés disso, o `Producer` pode apenas enviar mensagens para uma *exchange*.
+
+Nos tutoriais anteriores não sabíamos nada sobre *exchanges*, mas ainda assim fomos capazes de enviar mensagens para filas. Isso foi possível pois estávamos usando a *exchange default*, a qual é identificada pela cadeia de caracteres vazia (`""`).
+
+Quando a *exchange* informada for uma cadeia de caracteres vazia (*default* ou *nameless*), as mensagens são encaminhadas para a fila com o nome especificado no parâmetro `routingKey`, se ela existir.
+
+###### Temporary queues
+
+...

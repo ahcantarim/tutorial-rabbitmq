@@ -15,6 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Tutorial 2 - Work Queues
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.Worker", "Tutorial.RabbitMQ.Console.Worker\Tutorial.RabbitMQ.Console.Worker.csproj", "{95234244-9F35-48B5-84B5-421D2BE20264}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Tutorial 3 - Publish and Subscribe", "3. Tutorial 3 - Publish and Subscribe", "{ECFD14A2-DC0A-4F2E-A12B-5F9C2D57CE11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.EmitLog", "Tutorial.RabbitMQ.Console.EmitLog\Tutorial.RabbitMQ.Console.EmitLog.csproj", "{33D24547-D67D-4FEB-8C26-E7DFFA3527A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.ReceiveLogs", "Tutorial.RabbitMQ.Console.ReceiveLogs\Tutorial.RabbitMQ.Console.ReceiveLogs.csproj", "{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +43,14 @@ Global
 		{95234244-9F35-48B5-84B5-421D2BE20264}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95234244-9F35-48B5-84B5-421D2BE20264}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95234244-9F35-48B5-84B5-421D2BE20264}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33D24547-D67D-4FEB-8C26-E7DFFA3527A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33D24547-D67D-4FEB-8C26-E7DFFA3527A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33D24547-D67D-4FEB-8C26-E7DFFA3527A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33D24547-D67D-4FEB-8C26-E7DFFA3527A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +60,8 @@ Global
 		{83FF2D0B-EE44-45A5-BCA9-8E9A9A283C83} = {0CEB372D-E82E-43EB-9386-C340A3EBD2B2}
 		{E1D63EAD-60E9-4FE5-B11B-A32995992AFC} = {C6745A90-0523-45D5-8D40-8406CBBE2D5A}
 		{95234244-9F35-48B5-84B5-421D2BE20264} = {C6745A90-0523-45D5-8D40-8406CBBE2D5A}
+		{33D24547-D67D-4FEB-8C26-E7DFFA3527A4} = {ECFD14A2-DC0A-4F2E-A12B-5F9C2D57CE11}
+		{BB96A1AD-69F5-4D7A-B305-4E5D7E87A2BF} = {ECFD14A2-DC0A-4F2E-A12B-5F9C2D57CE11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F38BDFBB-F9A8-4372-973D-39FB03E21EA4}
