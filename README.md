@@ -9,16 +9,36 @@ Garanta que o **RabbitMQ** está instalado e sendo executado em `localhost` na p
 - **Username:** guest
 - **Password:** guest
 
+O **RabbitMQ** - e outras ferramentas de mensagens no geral, usa alguns jargões:
+
+- Um programa que envia mensagens é um `Producer`:
+
+![Producer](.github/producer.png)
+
+- Uma fila (`Queue`) armazena todas as mensagens que trafegam entre o **RabbitMQ** e suas aplicações. Uma fila é apenas limitada pela memória e espaço em disco do servidor. Vários `Producers` podem enviar mensagens que vão para uma fila, e vários `Consumers` podem tentar receber dados de uma fila.
+
+![Queue](.github/queue.png)
+
+- Um programa que majoritariamente espera para receber mensagens é um `Consumer`.
+
+![Queue](.github/consumer.png)
+
 
 # Tutorial 1
 
 [Basic Producer and Consumer](https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html)
 
-Foram escritos dois programas para enviar e receber mensagens em uma fila nomeada: um `Producer (Send)` que envia uma mensagem simples, e um `Consumer (Receive)` que recebe as mensagens e as exibe.
+Foram escritos dois programas para enviar e receber mensagens em uma fila nomeada: um `Producer` que envia uma mensagem simples, e um `Consumer` que recebe as mensagens e as exibe.
+
+![Queue](.github/tutorial-1-01.png)
 
 - `Tutorial.RabbitMQ.Console.Send`: console para adicionar mensagens em uma fila;
 
+![Queue](.github/tutorial-1-02.png)
+
 - `Tutorial.RabbitMQ.Console.Receive`: console para ler mensagens de uma fila;
+
+![Queue](.github/tutorial-1-03.png)
 
 
 # Tutorial 2
@@ -28,6 +48,8 @@ Foram escritos dois programas para enviar e receber mensagens em uma fila nomead
 Foi criada uma `fila de trabalho` que é usada para distribuir tarefas que consomem tempo através de múltiplos `Consumers`.
 
 Como não temos uma tarefa do mundo real para executar, como redimensionar imagens ou gerar arquivos PDF, simulamos algo nesse sentido através a função `Thread.Sleep()`. Consideramos o número de `.` na cadeia de caracteres enviada como sua complexidade: cada `.` contará como um segundo de "trabalho". Por exemplo, uma tarefa descrita por `Hello...` demorará 3 segundos para ser finalizada.
+
+![Queue](.github/tutorial-2-01.png)
 
 - `Tutorial.RabbitMQ.Console.NewTask`: console para adicionar mensagens em uma fila ;
 
@@ -87,6 +109,8 @@ Pode-se notar que o envio de mensagens aos `Consumers`, por vezes, pode não ser
 
 Isso acontece porque o **RabbitMQ** apenas envia a mensagem assim que ela entra na fila. Ele não olha para o número de mensagens não confirmadas de um `Consumer`.
 
+![Queue](.github/tutorial-2-02.png)
+
 Para alterar este comportamento, podemos usar o método `channel.BasicQos()` com um valor de `prefetchCount: 1`. Isso diz ao **RabbitMQ** para não dar mais de uma mensagem para um *worker* ao mesmo tempo. Ou, em outras palavras, não envie uma nova mensagem para um *worker* até que ele tenha processado e confirmado a anterior. Ao invés disso, ele irá enviá-la para o próximo *worker* que não estiver ocupado.
 
 ```csharp
@@ -127,6 +151,8 @@ A ideia principal do modelo de mensagens no **RabbitMQ** é que um `Producer` nu
 
 Ao invés disso, o `Producer` pode apenas enviar mensagens para uma *exchange*.
 
+![Queue](.github/tutorial-3-01.png)
+
 Nos tutoriais anteriores não sabíamos nada sobre *exchanges*, mas ainda assim fomos capazes de enviar mensagens para filas. Isso foi possível pois estávamos usando a *exchange default*, a qual é identificada pela cadeia de caracteres vazia (`""`).
 
 Quando a *exchange* informada for uma cadeia de caracteres vazia (*default* ou *nameless*), as mensagens são encaminhadas para a fila com o nome especificado no parâmetro `routingKey`, se ela existir.
@@ -151,6 +177,8 @@ Neste ponto, a propriedade `QueueName` contém um nome aleatório para a fila. P
 
 ###### Bindings
 
+![Queue](.github/tutorial-3-02.png)
+
 Nós já criamos a *exchange* que espalha as mensagens e uma fila. Agora nós precisamos dizer para a *exchange* para enviar mensagens para nossa fila. Essa relação entre uma *exchange* e uma fila é chamanda de *binding*.
 
 ```csharp
@@ -160,3 +188,5 @@ channel.QueueBind(queue: queueName,
 ```
 
 A partir de agora, a *exchange* `logs` irá acrescentar mensagens em nossa fila.
+
+![Queue](.github/tutorial-3-03.png)
