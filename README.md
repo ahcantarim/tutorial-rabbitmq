@@ -1,13 +1,98 @@
-- [RabbitMQ .NET client API reference online](https://rabbitmq.github.io/rabbitmq-dotnet-client/api/RabbitMQ.Client.html)
-- [RabbitMQ .NET tutorials](https://github.com/rabbitmq/rabbitmq-tutorials/tree/master/dotnet)
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-# Pré-requisitos
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/ahcantarim/tutorial-rabbitmq">
+    <img src=".github/logo.png" alt="tutorial-rabbitmq" width="80" height="80">
+  </a>
+
+  <h3 align="center">Tutoriais RabbitMQ</h3>
+
+  <p align="center">
+    Adicione uma breve descrição do projeto aqui.
+    <br />
+    <br />
+    <a href="https://github.com/ahcantarim/tutorial-rabbitmq/issues">Ver problemas abertos</a>
+    ·
+    <a href="https://github.com/ahcantarim/tutorial-rabbitmq/issues/new">Reportar um problema</a>
+  </p>
+</p>
+
+
+<!-- TABLE OF CONTENTS -->
+## Sumário
+
+<ol>
+    <li>
+        <a href="#sobre-este-projeto">Sobre este projeto</a>
+        <ul>
+            <li><a href="#tecnologias-utilizadas">Tecnologias utilizadas</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#configurações-do-ambiente-de-desenvolvimento">Configurações do ambiente de desenvolvimento</a>
+        <ul>
+            <li><a href="#pré-requisitos">Pré-requisitos</a></li>
+            <li><a href="#clonando-o-repositório">Clonando o repositório</a></li>
+            
+        </ul>
+    </li>
+    
+    <li><a href="#licença">Licença</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li><a href="#referências">Referências</a></li>
+</ol>
+
+
+## Sobre este projeto
+
+Este repositório foi elaborado como projeto de estudo para entender o funcionamento do **RabbitMQ** e suas aplicações práticas.
+
+Toda a documentação aqui transcrita tem como base a documentação oficial, que pode ser encontrada no site da ferramenta.
+
+
+### Tecnologias utilizadas
+
+* [Docker](https://www.docker.com)
+* [RabbitMQ](https://www.rabbitmq.com)
+
+
+## Configurações do ambiente de desenvolvimento
+
+Para obter uma cópia local atualizada e que possa ser executada corretamente, siga os passos abaixo.
+
+### Pré-requisitos
 
 Garanta que o **RabbitMQ** está instalado e sendo executado em `localhost` na porta padrão `5672`.
 
 - **Management:** http://localhost:15672
 - **Username:** guest
 - **Password:** guest
+
+
+### Clonando o repositório
+
+```bash
+git clone https://github.com/ahcantarim/tutorial-rabbitmq.git
+```
+
+
+### Instalando as dependências
+
+No diretório do projeto, executar o(s) comando(s):
+
+```bash
+$ ...
+```
+
+
+## Visão geral
 
 O **RabbitMQ** - e outras ferramentas de mensagens no geral, usa alguns jargões:
 
@@ -24,7 +109,7 @@ O **RabbitMQ** - e outras ferramentas de mensagens no geral, usa alguns jargões
 ![Queue](.github/consumer.png)
 
 
-# Tutorial 1
+## Tutorial 1 » "Hello World!"
 
 [Basic Producer and Consumer](https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html)
 
@@ -41,7 +126,7 @@ Foram escritos dois programas para enviar e receber mensagens em uma fila nomead
 ![Queue](.github/tutorial-1-03.png)
 
 
-# Tutorial 2
+## Tutorial 2 » Work queues
 
 [Work Queues (aka: Task Queues)](https://www.rabbitmq.com/tutorials/tutorial-two-dotnet.html)
 
@@ -56,7 +141,7 @@ Como não temos uma tarefa do mundo real para executar, como redimensionar image
 - `Tutorial.RabbitMQ.Console.Worker`: console para ler mensagens de uma fila simulando um processamento para cada mensagem; pode ser executada mais de uma instância e as mensagens serão lidas alternadamente por cada uma;
 
 
-###### Manual message acknowledgments (ack)
+### Manual message acknowledgments (ack)
 
 Foi alterado o valor do parâmetro `autoAck: false` no canal que consome a fila, visando realizar manualmente a confirmação/rejeição da mensagem recebida.
 
@@ -70,7 +155,7 @@ channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
 Usando esse código nós podemos ter certeza que mesmo que um `Consumer` seja finalizado no meio do processamento de uma mensagem, nada será perdido. Logo que isso ocorrer, todas as mensagens não confirmadas serão reenviadas para outros `Consumers`.
 
 
-###### Message durability
+### Message durability
 
 Anteriormente (com o *manual message ack*), vimos como garantir que mesmo que o `Consumer` seja finalizado por algum motivo, a tarefa não seja perdida. Mas, da forma atual, as tarefas seriam perdidas se o servidor do **RabbitMQ** parasse.
 
@@ -103,7 +188,7 @@ Adicionalmente, repassamos tais propriedades para o método `channel.BasicPublis
 > Se você precisa de uma garantia melhor, então você pode usar as confirmações de publicação (https://www.rabbitmq.com/confirms.html).
 
 
-###### Fair Dispatch
+### Fair Dispatch
 
 Pode-se notar que o envio de mensagens aos `Consumers`, por vezes, pode não ser "justo". Por exemplo, em uma situação com dois *workers*, onde todas as mensagens *pares* tem um processamento pesado e todas as *ímpares* tem um processamento leve, um *worker* estará constantemente ocupado e o outro não fará nenhum trabalho pesado.
 
@@ -125,7 +210,7 @@ channel.BasicQos(0, 1, false);
 > Você deve ficar de olho nisso, e talvez adicionar mais workers, ou ter alguma outra estratégia.
 
 
-# Tutorial 3
+## Tutorial 3 » Publish/Subscribe
 
 [Publish/Subscribe](https://www.rabbitmq.com/tutorials/tutorial-three-dotnet.html)
 
@@ -143,7 +228,7 @@ Nesse sistema de *log*, cada cópia do `Consumer` que estiver sendo executada ir
 
 Essencialmente, as mensagens publicadas serão transmitidas para todos os receptores.
 
-###### Exchanges
+### Exchanges
 
 Até aqui, enviamos e recebemos mensagens de e para uma fila. Agora introduziremos o conceito do modelo completo de mensageria com **RabbitMQ**.
 
@@ -157,7 +242,7 @@ Nos tutoriais anteriores não sabíamos nada sobre *exchanges*, mas ainda assim 
 
 Quando a *exchange* informada for uma cadeia de caracteres vazia (*default* ou *nameless*), as mensagens são encaminhadas para a fila com o nome especificado no parâmetro `routingKey`, se ela existir.
 
-###### Temporary queues
+### Temporary queues
 
 Anteriormente usamos filas que tinham nomes específicos. Nomear uma fila foi crucial naquele momento -- nós precisávamos apontar os *workers* para a mesma fila. Dar nome à filas é importante quando você quer compartilhá-la entre `Producers` e `Consumers`.
 
@@ -175,11 +260,13 @@ var queueName = channel.QueueDeclare().QueueName;
 
 Neste ponto, a propriedade `QueueName` contém um nome aleatório para a fila. Por exemplo, pode ser algo como `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
 
-###### Bindings
+### Bindings
 
 ![Queue](.github/tutorial-3-02.png)
 
 Nós já criamos a *exchange* que espalha as mensagens e uma fila. Agora nós precisamos dizer para a *exchange* para enviar mensagens para nossa fila. Essa relação entre uma *exchange* e uma fila é chamanda de *binding*.
+
+O *binding* é um relacionamento entre uma *exchange* e uma fila. Pode ser entendido da seguinte forma: a fila está interessada nas mensagens desta *exchange*.
 
 ```csharp
 channel.QueueBind(queue: queueName,
@@ -190,3 +277,41 @@ channel.QueueBind(queue: queueName,
 A partir de agora, a *exchange* `logs` irá acrescentar mensagens em nossa fila.
 
 ![Queue](.github/tutorial-3-03.png)
+
+
+## Licença
+
+Distribuído através da licença MIT. Veja `LICENSE` para mais informações.
+
+
+## Contato
+
+André Cantarim
+
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+
+## Referências
+
+* [RabbitMQ .NET client API reference online](https://rabbitmq.github.io/rabbitmq-dotnet-client/api/RabbitMQ.Client.html)
+* [RabbitMQ .NET tutorials](https://github.com/rabbitmq/rabbitmq-tutorials/tree/master/dotnet)
+
+
+<a href="#sumário">🔝 Voltar ao topo</a>
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/ahcantarim/tutorial-rabbitmq.svg?style=for-the-badge
+[contributors-url]: https://github.com/ahcantarim/tutorial-rabbitmq/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/ahcantarim/tutorial-rabbitmq.svg?style=for-the-badge
+[forks-url]: https://github.com/ahcantarim/tutorial-rabbitmq/network/members
+[stars-shield]: https://img.shields.io/github/stars/ahcantarim/tutorial-rabbitmq.svg?style=for-the-badge
+[stars-url]: https://github.com/ahcantarim/tutorial-rabbitmq/stargazers
+[issues-shield]: https://img.shields.io/github/issues/ahcantarim/tutorial-rabbitmq.svg?style=for-the-badge
+[issues-url]: https://github.com/ahcantarim/tutorial-rabbitmq/issues
+[license-shield]: https://img.shields.io/github/license/ahcantarim/tutorial-rabbitmq.svg?style=for-the-badge
+[license-url]: https://github.com/ahcantarim/tutorial-rabbitmq/blob/master/LICENSE
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/ahcantarim
+[product-screenshot]: .github/screenshot.png
