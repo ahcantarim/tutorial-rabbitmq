@@ -133,4 +133,30 @@ Quando a *exchange* informada for uma cadeia de caracteres vazia (*default* ou *
 
 ###### Temporary queues
 
-...
+Anteriormente usamos filas que tinham nomes específicos. Nomear uma fila foi crucial naquele momento -- nós precisávamos apontar os *workers* para a mesma fila. Dar nome à filas é importante quando você quer compartilhá-la entre `Producers` e `Consumers`.
+
+Mas esse não é o caso da aplicação de *log*. Aqui, nós queremos escutar todas as mensagens, não apenas um grupo delas. Também estamos interessados apenas no fluxo atual de mensagens e não nas antigas. Por isso, precisamos de duas coisas:
+
+Em primeiro lugar, sempre que nos conectarmos ao **RabbitMQ** precisamos de uma fila nova e vazia. Para fazer isso nós podemos criar uma fila com um nome aleatório ou, ainda melhor, deixar o servidor escolher um nome aleatório para nós.
+
+Em segundo lugar, assim que desconectarmos o `Consumer`, a fila deve ser automaticamente deletada.
+
+Quando nós não informamos parâmetros para o método `QueueDeclare()`, criamos uma fila nomeada e não durável, exclusiva e auto deletável.
+
+```csharp
+var queueName = channel.QueueDeclare().QueueName;
+```
+
+Neste ponto, a propriedade `QueueName` contém um nome aleatório para a fila. Por exemplo, pode ser algo como `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
+
+###### Bindings
+
+Nós já criamos a *exchange* que espalha as mensagens e uma fila. Agora nós precisamos dizer para a *exchange* para enviar mensagens para nossa fila. Essa relação entre uma *exchange* e uma fila é chamanda de *binding*.
+
+```csharp
+channel.QueueBind(queue: queueName,
+                  exchange: "logs",
+                  routingKey: "");
+```
+
+A partir de agora, a *exchange* `logs` irá acrescentar mensagens em nossa fila.
