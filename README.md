@@ -15,7 +15,7 @@
   <h3 align="center">Tutoriais RabbitMQ</h3>
 
   <p align="center">
-    Adicione uma breve descrição do projeto aqui.
+    Projeto de estudo para entender o funcionamento do RabbitMQ e suas aplicações práticas.
     <br />
     <br />
     <a href="https://github.com/ahcantarim/tutorial-rabbitmq/issues">Ver problemas abertos</a>
@@ -40,10 +40,8 @@
         <ul>
             <li><a href="#pré-requisitos">Pré-requisitos</a></li>
             <li><a href="#clonando-o-repositório">Clonando o repositório</a></li>
-            
         </ul>
     </li>
-    
     <li><a href="#licença">Licença</a></li>
     <li><a href="#contato">Contato</a></li>
     <li><a href="#referências">Referências</a></li>
