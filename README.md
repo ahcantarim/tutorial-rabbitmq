@@ -5,7 +5,6 @@
 [![MIT License][license-shield]][license-url]
 
 
-<!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://github.com/ahcantarim/tutorial-rabbitmq">
@@ -25,7 +24,6 @@
 </p>
 
 
-<!-- TABLE OF CONTENTS -->
 ## Sumário
 
 <ol>
@@ -40,6 +38,32 @@
         <ul>
             <li><a href="#pré-requisitos">Pré-requisitos</a></li>
             <li><a href="#clonando-o-repositório">Clonando o repositório</a></li>
+            <li><a href="#">Instalando as dependências</a></li>
+        </ul>
+    </li>
+    <li><a href="#">Visão geral</a></li>
+    <li>
+        <a href="#">Tutorial 1 » "Hello World!"</a>
+        <ul>
+            <li><a href="#">Executando os projetos</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 2 » Work queues</a>
+        <ul>
+            <li><a href="#">Manual message acknowledgments (ack)</a></li>
+            <li><a href="#">Message durability</a></li>
+            <li><a href="#">Fair Dispatch</a></li>
+            <li><a href="#">Executando os projetos</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 3 » Publish/Subscribe</a>
+        <ul>
+            <li><a href="#">Exchanges</a></li>
+            <li><a href="#">Temporary queues</a></li>
+            <li><a href="#">Bindings</a></li>
+            <li><a href="#">Executando os projetos</a></li>
         </ul>
     </li>
     <li><a href="#licença">Licença</a></li>
@@ -86,7 +110,7 @@ git clone https://github.com/ahcantarim/tutorial-rabbitmq.git
 No diretório do projeto, executar o(s) comando(s):
 
 ```bash
-$ ...
+dotnet restore
 ```
 
 
@@ -122,6 +146,28 @@ Foram escritos dois programas para enviar e receber mensagens em uma fila nomead
 - `Tutorial.RabbitMQ.Console.Receive`: console para ler mensagens de uma fila;
 
 ![Queue](.github/tutorial-1-03.png)
+
+### Executando os projetos
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Execute primeiro o `Consumer`:
+
+```bash
+cd Tutorial.RabbitMQ.Console.Receive
+dotnet run
+```
+
+Depois execute o `Producer`:
+
+```bash
+cd Tutorial.RabbitMQ.Console.Send
+dotnet run
+```
+
+O `Consumer` irá exibir as mensagens que obter do `Producer` via **RabbitMQ**. O `Consumer` continuará sendo executado, aguardando por mensagens, então você pode tentar executar um novo `Producer` a partir de outro terminal.
+
+No próximo tutorial iremos criar uma simples fila de trabalho.
 
 
 ## Tutorial 2 » Work queues
@@ -207,6 +253,36 @@ channel.BasicQos(0, 1, false);
 > 
 > Você deve ficar de olho nisso, e talvez adicionar mais workers, ou ter alguma outra estratégia.
 
+### Executando os projetos
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Execute primeiro o `Consumer`:
+
+```bash
+cd Tutorial.RabbitMQ.Console.Worker
+dotnet run
+```
+
+Depois execute o `Producer`:
+
+```bash
+cd Tutorial.RabbitMQ.Console.NewTask
+dotnet run
+```
+
+Você também pode executar cada projeto mais de uma vez (usando mais de um terminal), para verificar como é feita a distribuição de mensagens entre eles. As opções de durabilidade permitem que a mensagem sobreviva mesmo que o **RabbitMQ** seja reiniciado (ou mesmo que um `Consumer` seja finalizado no meio do processamento de uma tarefa - neste caso, a tarefa será entregue a outro `Consumer` assim que possível). Adicionalmente, na execução do `Producer`, você pode informar um argumento com `.` para simular uma carga de trabalho maior:
+
+```bash
+cd Tutorial.RabbitMQ.Console.NewTask
+dotnet run "Task que demora 5 segundos....."
+dotnet run "Task que demora 3 segundos..."
+dotnet run "Task que demora 20 segundos...................."
+```
+
+
+No próximo tutorial iremos aprender como enviar a mesma mensagem para vários `Consumers`.
+
 
 ## Tutorial 3 » Publish/Subscribe
 
@@ -275,6 +351,33 @@ channel.QueueBind(queue: queueName,
 A partir de agora, a *exchange* `logs` irá acrescentar mensagens em nossa fila.
 
 ![Queue](.github/tutorial-3-03.png)
+
+### Executando os projetos
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Execute primeiro o `Consumer`. Se você quer salvar os *logs* em um arquivo, utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogs
+dotnet run > logs_from_rabbit.log
+```
+
+Se você quer ver os logs na tela, através de um novo terminal utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogs
+dotnet run
+```
+
+E para gerar os *logs* utilize o comando:
+
+```bash
+cd Tutorial.RabbitMQ.Console.EmitLog
+dotnet run
+```
+
+No próximo tutorial iremos aprender como escutar um subconjunto de mensagens.
 
 
 ## Licença
