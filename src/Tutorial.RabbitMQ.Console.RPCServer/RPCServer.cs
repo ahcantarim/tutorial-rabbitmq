@@ -52,7 +52,6 @@ namespace Tutorial.RabbitMQ.Console.RPCServer
             {
                 var message = Encoding.UTF8.GetString(body);
                 int n = int.Parse(message);
-
                 System.Console.WriteLine($"{DateTime.Now}: fib({message})");
                 response = fib(n).ToString();
 
@@ -78,8 +77,7 @@ namespace Tutorial.RabbitMQ.Console.RPCServer
 
         /// <summary>
         /// Assumes only valid positive integer input.
-        /// Don't expect this one to work for big numbers, and it's
-        /// probably the slowest recursive implementation possible.
+        /// Don't expect this one to work for big numbers, and it's probably the slowest recursive implementation possible.
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>

@@ -3,19 +3,20 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Tutorial.RabbitMQ.Console.RPCClient
 {
     class RPCClient
     {
+        private const string QUEUE_NAME = "rpc_queue";
+
         private readonly IConnection connection;
         private readonly IModel channel;
-        private readonly string queueName = "rpc_queue";
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
-        private readonly IBasicProperties props;
-        private readonly string CorrelationId;
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<string>> callbackMapper = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
 
         public RPCClient()
         {
@@ -23,33 +24,37 @@ namespace Tutorial.RabbitMQ.Console.RPCClient
 
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
+
+            // Declare a server-named queue.
             replyQueueName = channel.QueueDeclare().QueueName;
+            
             consumer = new EventingBasicConsumer(channel);
-
-            props = channel.CreateBasicProperties();
-            CorrelationId = Guid.NewGuid().ToString();
-            props.CorrelationId = CorrelationId;
-            props.ReplyTo = replyQueueName;
-
             consumer.Received += Consumer_Received;
         }
 
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            if (!callbackMapper.TryRemove(e.BasicProperties.CorrelationId, out TaskCompletionSource<string> tcs))
+                return;
+
             var body = e.Body.ToArray();
             var response = Encoding.UTF8.GetString(body);
-            if (e.BasicProperties.CorrelationId == CorrelationId)
-            {
-                respQueue.Add(response);
-            }
+            tcs.TrySetResult(response);
         }
 
-        public string Call(string message)
+        public Task<string> CallAsync(string message, CancellationToken cancellationToken = default(CancellationToken))
         {
+            IBasicProperties props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
             var messageBytes = Encoding.UTF8.GetBytes(message);
+            var tcs = new TaskCompletionSource<string>();
+            callbackMapper.TryAdd(correlationId, tcs);
 
             channel.BasicPublish(exchange: string.Empty,
-                                 routingKey: queueName, 
+                                 routingKey: QUEUE_NAME, 
                                  basicProperties: props,
                                  body: messageBytes);
 
@@ -57,7 +62,8 @@ namespace Tutorial.RabbitMQ.Console.RPCClient
                                  queue: replyQueueName,
                                  autoAck: true);
 
-            return respQueue.Take();
+            cancellationToken.Register(() => callbackMapper.TryRemove(correlationId, out var tmp));
+            return tcs.Task;
         }
 
         public void Close()
@@ -68,12 +74,23 @@ namespace Tutorial.RabbitMQ.Console.RPCClient
 
     public class Rpc
     {
-        static void Main(string[] args)
+       public  static void Main(string[] args)
+        {
+            System.Console.WriteLine($"{DateTime.Now}: RPC Client.");
+            string n = args.Length > 0 ? args[0] : "30";
+            Task t = InvokeAsync(n);
+            t.Wait();
+
+            System.Console.WriteLine($"{DateTime.Now}: Press [enter] to exit.");
+            System.Console.ReadLine();
+        }
+
+        private static async Task InvokeAsync(string n)
         {
             var rpcClient = new RPCClient();
 
-            System.Console.WriteLine($"{DateTime.Now}: Press Requesting fib(30).");
-            var response = rpcClient.Call("4");
+            System.Console.WriteLine($"{DateTime.Now}: Requesting fib({n}).");
+            var response = await rpcClient.CallAsync(n.ToString());
             System.Console.WriteLine($"{DateTime.Now}: Got '{response}'");
 
             rpcClient.Close();
