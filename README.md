@@ -91,7 +91,7 @@ Para obter uma cópia local atualizada e que possa ser executada corretamente, s
 
 ### Pré-requisitos
 
-Garanta que o **RabbitMQ** está instalado e sendo executado em `localhost` na porta padrão `5672`.
+Os tutoriais assumem que o **RabbitMQ** está instalado e sendo executado em `localhost` na porta padrão (`5672`).
 
 - **Management:** http://localhost:15672
 - **Username:** guest
@@ -114,11 +114,15 @@ dotnet restore
 ```
 
 
-## Visão geral
+## Introdução
 
-O **RabbitMQ** - e outras ferramentas de mensagens no geral, usa alguns jargões:
+**RabbitMQ** é um *message broker*: ele aceita e encaminha mensagens. Você pode pensar sobre isso como se fossem os *Correios*: quando você coloca a carta que você quer em uma caixa de postagem, você pode ter certeza de que eventualmente o carteiro irá entregar sua carta ao destinatário. Nesta analogia, o **RabbitMQ** é a caixa de postagem, a agência dos *Correios* e o carteiro.
 
-- Um programa que envia mensagens é um `Producer`:
+A maior diferença entre o **RabbitMQ** e uma agência dos *Correios* é que ele não lida com papel, ao invés disso aceita, armazena e encaminha blobs binários de dados ‒ *mensagens*.
+
+O **RabbitMQ** ‒ e outras ferramentas de mensagens no geral ‒ usa alguns jargões:
+
+- *Producing* significa nada mais do que *enviando*. Um programa que envia mensagens é um `Producer` (*produtor*):
 
 ![Producer](.github/producer.png)
 
@@ -378,6 +382,15 @@ dotnet run
 ```
 
 No próximo tutorial iremos aprender como escutar um subconjunto de mensagens.
+
+
+## Tutorial 4 » Routing
+
+[Routing](https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html)
+
+No tutorial anterior, criamos um sistema de *log* simples. Fomos capazes de transmitir mensagens para vários receptores.
+
+Neste tutorial vamos adicionar uma funcionalidade à ele - vamos tornar possível se subscrever apenas a um subconjunto de mensagens. Por exemplo, teremos a possibilidade de direcionar apenas as mensagens de *erro crítico* para o arquivo em disco, enquanto ainda é possível exibir todas as mensagens de *log* em tela.
 
 
 ## Licença
