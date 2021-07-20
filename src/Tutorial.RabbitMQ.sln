@@ -23,27 +23,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.4. Routing", "1.4. Routing", "{C487ED4B-21F0-4969-86BB-863B088BD7B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.EmitLogDirect", "Tutorial.RabbitMQ.Console.EmitLogDirect\Tutorial.RabbitMQ.Console.EmitLogDirect.csproj", "{36029E5A-A2EF-445F-ABB0-5BCBD25E44FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.EmitLogDirect", "Tutorial.RabbitMQ.Console.EmitLogDirect\Tutorial.RabbitMQ.Console.EmitLogDirect.csproj", "{36029E5A-A2EF-445F-ABB0-5BCBD25E44FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.ReceiveLogsDirect", "Tutorial.RabbitMQ.Console.ReceiveLogsDirect\Tutorial.RabbitMQ.Console.ReceiveLogsDirect.csproj", "{9F3ECD8E-BEB4-459D-89BD-0705E87FED73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.ReceiveLogsDirect", "Tutorial.RabbitMQ.Console.ReceiveLogsDirect\Tutorial.RabbitMQ.Console.ReceiveLogsDirect.csproj", "{9F3ECD8E-BEB4-459D-89BD-0705E87FED73}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.5. Topics", "1.5. Topics", "{E13BE1D4-CB15-4A45-8097-397D9E552000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.EmitLogTopic", "Tutorial.RabbitMQ.Console.EmitLogTopic\Tutorial.RabbitMQ.Console.EmitLogTopic.csproj", "{09AB929F-73B6-4024-B911-AF2F03A1837B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.EmitLogTopic", "Tutorial.RabbitMQ.Console.EmitLogTopic\Tutorial.RabbitMQ.Console.EmitLogTopic.csproj", "{09AB929F-73B6-4024-B911-AF2F03A1837B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.ReceiveLogsTopic", "Tutorial.RabbitMQ.Console.ReceiveLogsTopic\Tutorial.RabbitMQ.Console.ReceiveLogsTopic.csproj", "{6C0F7FED-3833-430C-9CB1-1E635030A48B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.ReceiveLogsTopic", "Tutorial.RabbitMQ.Console.ReceiveLogsTopic\Tutorial.RabbitMQ.Console.ReceiveLogsTopic.csproj", "{6C0F7FED-3833-430C-9CB1-1E635030A48B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.6. RPC", "1.6. RPC", "{97523ADE-31E1-4C9D-B7FD-BC9C6C1C2DF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.RPCServer", "Tutorial.RabbitMQ.Console.RPCServer\Tutorial.RabbitMQ.Console.RPCServer.csproj", "{B1D95063-4309-425E-9134-A2C3C4B019F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.RPCServer", "Tutorial.RabbitMQ.Console.RPCServer\Tutorial.RabbitMQ.Console.RPCServer.csproj", "{B1D95063-4309-425E-9134-A2C3C4B019F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.RPCClient", "Tutorial.RabbitMQ.Console.RPCClient\Tutorial.RabbitMQ.Console.RPCClient.csproj", "{0E2ACEEA-FF23-4BD6-9410-BC3961D83EDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.RPCClient", "Tutorial.RabbitMQ.Console.RPCClient\Tutorial.RabbitMQ.Console.RPCClient.csproj", "{0E2ACEEA-FF23-4BD6-9410-BC3961D83EDD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Testes", "2. Testes", "{96354F06-E374-454F-9960-770EEA247ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.LoadTest.Server", "Tutorial.RabbitMQ.Console.LoadTest.Server\Tutorial.RabbitMQ.Console.LoadTest.Server.csproj", "{AC0339F3-FACC-45D5-BC8E-642C5AD4E580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.LoadTest.Server", "Tutorial.RabbitMQ.Console.LoadTest.Server\Tutorial.RabbitMQ.Console.LoadTest.Server.csproj", "{AC0339F3-FACC-45D5-BC8E-642C5AD4E580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.LoadTest.Client", "Tutorial.RabbitMQ.Console.LoadTest.Client\Tutorial.RabbitMQ.Console.LoadTest.Client.csproj", "{87E4BE65-16B1-48AE-A08C-2DC705D90231}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.LoadTest.Client", "Tutorial.RabbitMQ.Console.LoadTest.Client\Tutorial.RabbitMQ.Console.LoadTest.Client.csproj", "{87E4BE65-16B1-48AE-A08C-2DC705D90231}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Tutoriais", "1. Tutoriais", "{1F783923-0437-41B9-A169-4F2EA70D9C2C}"
 EndProject
@@ -55,7 +55,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.1. Limite da fila", "3.1.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.7. Publisher Confirms", "1.7. Publisher Confirms", "{6536DFBC-1D86-4312-BDA9-F10DD1C73281}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.PublisherConfirms", "Tutorial.RabbitMQ.Console.PublisherConfirms\Tutorial.RabbitMQ.Console.PublisherConfirms.csproj", "{E69C703E-18DA-4E87-B753-9ABFC049787D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tutorial.RabbitMQ.Console.PublisherConfirms", "Tutorial.RabbitMQ.Console.PublisherConfirms\Tutorial.RabbitMQ.Console.PublisherConfirms.csproj", "{E69C703E-18DA-4E87-B753-9ABFC049787D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.QueueLengthLimit", "Tutorial.RabbitMQ.Console.QueueLengthLimit\Tutorial.RabbitMQ.Console.QueueLengthLimit.csproj", "{577506BB-A8E6-46A8-946A-0FFD57FEBF5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.DeadLetterExchange", "Tutorial.RabbitMQ.Console.DeadLetterExchange\Tutorial.RabbitMQ.Console.DeadLetterExchange.csproj", "{767E5531-B002-4481-A63F-ACF541205003}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tutorial.RabbitMQ.Console.LimitedQueueWorker", "Tutorial.RabbitMQ.Console.LimitedQueueWorker\Tutorial.RabbitMQ.Console.LimitedQueueWorker.csproj", "{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +129,18 @@ Global
 		{E69C703E-18DA-4E87-B753-9ABFC049787D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E69C703E-18DA-4E87-B753-9ABFC049787D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E69C703E-18DA-4E87-B753-9ABFC049787D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{577506BB-A8E6-46A8-946A-0FFD57FEBF5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577506BB-A8E6-46A8-946A-0FFD57FEBF5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577506BB-A8E6-46A8-946A-0FFD57FEBF5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577506BB-A8E6-46A8-946A-0FFD57FEBF5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{767E5531-B002-4481-A63F-ACF541205003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{767E5531-B002-4481-A63F-ACF541205003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{767E5531-B002-4481-A63F-ACF541205003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{767E5531-B002-4481-A63F-ACF541205003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +170,9 @@ Global
 		{B0EBC6E2-FF4C-49A0-91A3-873637B01D80} = {F8641FD7-223F-4B99-AA5B-756F5B632F67}
 		{6536DFBC-1D86-4312-BDA9-F10DD1C73281} = {1F783923-0437-41B9-A169-4F2EA70D9C2C}
 		{E69C703E-18DA-4E87-B753-9ABFC049787D} = {6536DFBC-1D86-4312-BDA9-F10DD1C73281}
+		{577506BB-A8E6-46A8-946A-0FFD57FEBF5C} = {B0EBC6E2-FF4C-49A0-91A3-873637B01D80}
+		{767E5531-B002-4481-A63F-ACF541205003} = {B0EBC6E2-FF4C-49A0-91A3-873637B01D80}
+		{74CE82D9-89B4-4D5B-AA76-F6D2EAA14C13} = {B0EBC6E2-FF4C-49A0-91A3-873637B01D80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F38BDFBB-F9A8-4372-973D-39FB03E21EA4}
