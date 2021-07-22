@@ -41,7 +41,15 @@
             <li><a href="#">Instalando as dependências</a></li>
         </ul>
     </li>
-    <li><a href="#">Visão geral</a></li>
+    <li>
+        <a href="#">Introdução</a>
+        <ul>
+            <li><a href="#">Conectando aplicações no servidor do RabbitMQ</a></li>
+            <li><a href="#">Declarando uma fila</a></li>
+            <li><a href="#">Enviando mensagens</a></li>
+            <li><a href="#">Recebendo mensagens</a></li>
+        </ul>
+    </li>
     <li>
         <a href="#">Tutorial 1 » "Hello World!"</a>
         <ul>
@@ -64,6 +72,30 @@
             <li><a href="#">Temporary queues</a></li>
             <li><a href="#">Bindings</a></li>
             <li><a href="#">Executando os projetos</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 4 » Routing</a>
+        <ul>
+            <li><a href="#">#</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 5 » Topics</a>
+        <ul>
+            <li><a href="#">#</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 6 » RPC</a>
+        <ul>
+            <li><a href="#">#</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#">Tutorial 7 » Publisher Confirms</a>
+        <ul>
+            <li><a href="#">#</a></li>
         </ul>
     </li>
     <li><a href="#licença">Licença</a></li>
@@ -92,6 +124,8 @@ Para obter uma cópia local atualizada e que possa ser executada corretamente, s
 ### Pré-requisitos
 
 Os tutoriais assumem que o **RabbitMQ** está instalado e sendo executado em `localhost` na porta padrão (`5672`).
+
+Para acessar o ambiente de gerenciamento, utilize as informações abaixo:
 
 - **Management:** http://localhost:15672
 - **Username:** guest
@@ -126,13 +160,92 @@ O **RabbitMQ** ‒ e outras ferramentas de mensagens no geral ‒ usa alguns jar
 
 ![Producer](.github/producer.png)
 
-- Uma fila (`Queue`) armazena todas as mensagens que trafegam entre o **RabbitMQ** e suas aplicações. Uma fila é apenas limitada pela memória e espaço em disco do servidor. Vários `Producers` podem enviar mensagens que vão para uma fila, e vários `Consumers` podem tentar receber dados de uma fila.
+- Uma `Queue` (*fila*) é o nome para uma caixa postal que vive dentro do **RabbitMQ**. Apesar das mensagens fluirem entre o **RabbitMQ** e suas aplicações, elas apenas podem ser armazenadas dentro de uma *fila*. Uma *fila* é apenas limitada pela memória e espaço em disco do servidor, e é essencialmente um grande *buffer de mensagens*. Vários `Producers` podem enviar mensagens que vão para uma fila, e vários `Consumers` podem tentar receber dados de uma fila. É assim que representamos uma fila:
 
 ![Queue](.github/queue.png)
 
-- Um programa que majoritariamente espera para receber mensagens é um `Consumer`.
+- *Consuming* tem um significado parecido com *producing*. Um `Consumer` (*consumidor*) é um programa que majoritariamente espera para receber mensagens:
 
 ![Queue](.github/consumer.png)
+
+Note que o `Producer`, `Consumer` e o *broker* não precisam residir no mesmo servidor. De fato na maioria das aplicações isso não acontece. Uma aplicação pode ser ao mesmo tempo um `Producer` e um `Consumer`, também.
+
+
+### Conectando aplicações no servidor do RabbitMQ
+
+Para criar uma conexão com o servidor, teremos sempre algo parecido com isso:
+
+```csharp
+class Send
+{
+    public static void Main()
+    {
+        var factory = new ConnectionFactory() { HostName = "localhost" };
+
+        using (var connection = factory.CreateConnection())
+        using (var channel = connection.CreateModel())
+        {
+            ...
+        }
+    }
+}
+```
+
+A conexão abstrai a conexão *socket* e se encarrega de negociar a versão do protocolo e a autenticação para nós. Aqui, estamos conectando a um nó local do **RabbitMQ** ‒ por isso o *localhost*. Se nós quisermos nos conectar a um nó em um servidor diferente, simplesmente especificamos o *HostName* ou endereço IP aqui:
+
+```csharp
+var factory = new ConnectionFactory() { HostName = "xxx.xxx.xxx.xxx", Port = 5672, UserName = "xxx", Password = "xxx" };
+```
+
+
+### Declarando uma fila
+
+Declarar uma fila é uma ação idempotente ‒ ela apenas será criada se ainda não existir. Por conta disso, é comum declararmos a fila tanto no `Producer` quanto no `Consumer`, pois queremos garantir que a fila exista antes de utilizá-la.
+
+```csharp
+channel.QueueDeclare(queue: "hello",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+```
+
+
+### Enviando mensagens
+
+O conteúdo de mensagem é um *array de bytes*, então você pode codificar qualquer coisa que quiser.
+
+```csharp
+string message = "Hello World!";
+var body = Encoding.UTF8.GetBytes(message);
+
+channel.BasicPublish(exchange: "",
+                     routingKey: "hello",
+                     basicProperties: null,
+                     body: body);
+
+Console.WriteLine(" [x] Sent {0}", message);
+```
+
+
+### Recebendo mensagens
+
+Considerando que sempre iremos obter as mensagens de forma assíncrona de uma fila do servidor, utilizaremos um *callback*. O manipulador de evento `EventingBasicConsumer.Received` nos permite isso.
+
+```csharp
+var consumer = new EventingBasicConsumer(channel);
+
+consumer.Received += (model, ea) =>
+{
+    var body = ea.Body.ToArray();
+    var message = Encoding.UTF8.GetString(body);
+    Console.WriteLine(" [x] Received {0}", message);
+};
+
+channel.BasicConsume(queue: "hello",
+                     autoAck: true,
+                     consumer: consumer);
+```
 
 
 ## Tutorial 1 » "Hello World!"
@@ -143,11 +256,11 @@ Foram escritos dois programas para enviar e receber mensagens em uma fila nomead
 
 ![Queue](.github/tutorial-1-01.png)
 
-- `Tutorial.RabbitMQ.Console.Send`: console para adicionar mensagens em uma fila;
+- `Tutorial.RabbitMQ.Console.Send`: Produtor que conecta no **RabbitMQ**, envia uma mensagem única, e é finalizado.
 
 ![Queue](.github/tutorial-1-02.png)
 
-- `Tutorial.RabbitMQ.Console.Receive`: console para ler mensagens de uma fila;
+- `Tutorial.RabbitMQ.Console.Receive`: Consumidor que fica escutando as mensagens do **RabbitMQ**. Diferente do produtor que envia uma única mensagem e é finalizado, ele será executado continuamente para escutar novas mensagens e exibi-las.
 
 ![Queue](.github/tutorial-1-03.png)
 
