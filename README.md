@@ -77,7 +77,11 @@
     <li>
         <a href="#">Tutorial 4 » Routing</a>
         <ul>
-            <li><a href="#">#</a></li>
+            <li><a href="#">Direct exchange</a></li>
+            <li><a href="#">Multiple bindings</a></li>
+            <li><a href="#">Emitting logs</a></li>
+            <li><a href="#">Subscribing</a></li>
+            <li><a href="#">Executando os projetos</a></li>
         </ul>
     </li>
     <li>
@@ -110,7 +114,6 @@ Este repositório foi elaborado como projeto de estudo para entender o funcionam
 
 Toda a documentação aqui transcrita tem como base a documentação oficial, que pode ser encontrada no site da ferramenta.
 
-
 ### Tecnologias utilizadas
 
 * [Docker](https://www.docker.com)
@@ -131,13 +134,11 @@ Para acessar o ambiente de gerenciamento, utilize as informações abaixo:
 - **Username:** guest
 - **Password:** guest
 
-
 ### Clonando o repositório
 
 ```bash
 git clone https://github.com/ahcantarim/tutorial-rabbitmq.git
 ```
-
 
 ### Instalando as dependências
 
@@ -170,7 +171,6 @@ O **RabbitMQ** ‒ e outras ferramentas de mensagens no geral ‒ usa alguns jar
 
 Note que o `Producer`, `Consumer` e o *broker* não precisam residir no mesmo servidor. De fato na maioria das aplicações isso não acontece. Uma aplicação pode ser ao mesmo tempo um `Producer` e um `Consumer`, também.
 
-
 ### Conectando aplicações no servidor do RabbitMQ
 
 Para criar uma conexão com o servidor, teremos sempre algo parecido com isso:
@@ -197,7 +197,6 @@ A conexão abstrai a conexão *socket* e se encarrega de negociar a versão do p
 var factory = new ConnectionFactory() { HostName = "xxx.xxx.xxx.xxx", Port = 5672, UserName = "xxx", Password = "xxx" };
 ```
 
-
 ### Declarando uma fila
 
 Declarar uma fila é uma ação idempotente ‒ ela apenas será criada se ainda não existir. Por conta disso, é comum declararmos a fila tanto no `Producer` quanto no `Consumer`, pois queremos garantir que a fila exista antes de utilizá-la.
@@ -209,7 +208,6 @@ channel.QueueDeclare(queue: "hello",
                      autoDelete: false,
                      arguments: null);
 ```
-
 
 ### Enviando mensagens
 
@@ -224,9 +222,8 @@ channel.BasicPublish(exchange: "",
                      basicProperties: null,
                      body: body);
 
-Console.WriteLine(" [x] Sent {0}", message);
+Console.WriteLine($" [x] Sent {message}");
 ```
-
 
 ### Recebendo mensagens
 
@@ -239,7 +236,7 @@ consumer.Received += (model, ea) =>
 {
     var body = ea.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
-    Console.WriteLine(" [x] Received {0}", message);
+    Console.WriteLine($" [x] Received {message}");
 };
 
 channel.BasicConsume(queue: "hello",
@@ -252,19 +249,25 @@ channel.BasicConsume(queue: "hello",
 
 [Basic Producer and Consumer](https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html)
 
-Foram escritos dois programas para enviar e receber mensagens em uma fila nomeada: um `Producer` que envia uma mensagem simples, e um `Consumer` que recebe as mensagens e as exibe.
+Neste tutorial, foram escritos dois programas: um produtor que envia uma mensagem única, e um consumidor que recebe mensagens e exibe-as em tela.
+
+No diagrama abaixo, `P` é nosso produtor e `C` é nosso consumidor. A caixa no meio é uma fila.
 
 ![Queue](.github/tutorial-1-01.png)
 
-- `Tutorial.RabbitMQ.Console.Send`: Produtor que conecta no **RabbitMQ**, envia uma mensagem única, e é finalizado.
+### Sending
 
 ![Queue](.github/tutorial-1-02.png)
 
-- `Tutorial.RabbitMQ.Console.Receive`: Consumidor que fica escutando as mensagens do **RabbitMQ**. Diferente do produtor que envia uma única mensagem e é finalizado, ele será executado continuamente para escutar novas mensagens e exibi-las.
+### Receiving
 
 ![Queue](.github/tutorial-1-03.png)
 
 ### Executando os projetos
+
+- `Tutorial.RabbitMQ.Console.Send`: Produtor que conecta no **RabbitMQ**, envia uma mensagem única, e é finalizado.
+
+- `Tutorial.RabbitMQ.Console.Receive`: Consumidor que fica escutando as mensagens do **RabbitMQ**. Diferente do produtor que envia uma única mensagem e é finalizado, ele será executado continuamente para escutar novas mensagens e exibi-las.
 
 Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
 
@@ -297,11 +300,6 @@ Como não temos uma tarefa do mundo real para executar, como redimensionar image
 
 ![Queue](.github/tutorial-2-01.png)
 
-- `Tutorial.RabbitMQ.Console.NewTask`: console para adicionar mensagens em uma fila ;
-
-- `Tutorial.RabbitMQ.Console.Worker`: console para ler mensagens de uma fila simulando um processamento para cada mensagem; pode ser executada mais de uma instância e as mensagens serão lidas alternadamente por cada uma;
-
-
 ### Manual message acknowledgments (ack)
 
 Foi alterado o valor do parâmetro `autoAck: false` no canal que consome a fila, visando realizar manualmente a confirmação/rejeição da mensagem recebida.
@@ -314,7 +312,6 @@ channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
 ```
 
 Usando esse código nós podemos ter certeza que mesmo que um `Consumer` seja finalizado no meio do processamento de uma mensagem, nada será perdido. Logo que isso ocorrer, todas as mensagens não confirmadas serão reenviadas para outros `Consumers`.
-
 
 ### Message durability
 
@@ -348,7 +345,6 @@ Adicionalmente, repassamos tais propriedades para o método `channel.BasicPublis
 > 
 > Se você precisa de uma garantia melhor, então você pode usar as confirmações de publicação (https://www.rabbitmq.com/confirms.html).
 
-
 ### Fair Dispatch
 
 Pode-se notar que o envio de mensagens aos `Consumers`, por vezes, pode não ser "justo". Por exemplo, em uma situação com dois *workers*, onde todas as mensagens *pares* tem um processamento pesado e todas as *ímpares* tem um processamento leve, um *worker* estará constantemente ocupado e o outro não fará nenhum trabalho pesado.
@@ -371,6 +367,10 @@ channel.BasicQos(0, 1, false);
 > Você deve ficar de olho nisso, e talvez adicionar mais workers, ou ter alguma outra estratégia.
 
 ### Executando os projetos
+
+- `Tutorial.RabbitMQ.Console.NewTask`: console para adicionar mensagens em uma fila ;
+
+- `Tutorial.RabbitMQ.Console.Worker`: console para ler mensagens de uma fila simulando um processamento para cada mensagem; pode ser executada mais de uma instância e as mensagens serão lidas alternadamente por cada uma;
 
 Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
 
@@ -410,10 +410,6 @@ No tutorial anterior foi criada uma fila de trabalho. Assume-se através de uma 
 Agora será feito algo completamente diferente -- iremos entregar uma mesma mensagem a múltiplos `Consumers`.
 
 Para ilustrar este padrão, foi criado um sistema de *log* simples. Consiste em dois programas -- o primeiro envia as mensagens de log e o segundo recebe e exibe as mesmas.
-
-- `Tutorial.RabbitMQ.Console.EmitLog`: console para transmitir mensagens a uma *Exchange*;
-
-- `Tutorial.RabbitMQ.Console.ReceiveLogs`: console para receber mensagens de uma *Exchange*;
 
 Nesse sistema de *log*, cada cópia do `Consumer` que estiver sendo executada irá receber as mensagens. Assim, pode-se executar um receptor e direcionar os logs para o disco rígido (arquivo); e ao mesmo tempo pode-se executar outro receptor e visualizar os logs em tela.
 
@@ -471,6 +467,10 @@ A partir de agora, a *exchange* `logs` irá acrescentar mensagens em nossa fila.
 
 ### Executando os projetos
 
+- `Tutorial.RabbitMQ.Console.EmitLog`: console para transmitir mensagens a uma *Exchange*;
+
+- `Tutorial.RabbitMQ.Console.ReceiveLogs`: console para receber mensagens de uma *Exchange*;
+
 Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
 
 Execute primeiro o `Consumer`. Se você quer salvar os *logs* em um arquivo, utilize o comando abaixo:
@@ -504,6 +504,135 @@ No próximo tutorial iremos aprender como escutar um subconjunto de mensagens.
 No tutorial anterior, criamos um sistema de *log* simples. Fomos capazes de transmitir mensagens para vários receptores.
 
 Neste tutorial vamos adicionar uma funcionalidade à ele - vamos tornar possível se subscrever apenas a um subconjunto de mensagens. Por exemplo, teremos a possibilidade de direcionar apenas as mensagens de *erro crítico* para o arquivo em disco, enquanto ainda é possível exibir todas as mensagens de *log* em tela.
+
+*Bindings* podem ter um parâmetro extra chamado `routingKey`. Para evitar a confusão com o parâmetro do método `BasicPublish`, iremos chamá-lo aqui de `binding key`. Essa é a forma que nós podemos criar um *binding* com uma *key*:
+
+```csharp
+channel.QueueBind(queue: queueName,
+                  exchange: "direct_logs",
+                  routingKey: "black");
+```
+
+O significado de um *binding key* dependo do tipo de *exchange*. As *exchanges* do tipo `Fanout`, a qual usamos previamente, simplesmente ignoram este valor.
+
+### Direct exchange
+
+Nosso sistema de *log* do tutorial anterior transmite todas as mensagens para todos os `Consumers`. Nós queremos extender isso para permitir filtrar mensagens baseadas em sua severidade. Por exemplo, nós podemos querer que o programa que está escrevendo mensagens de *log* no disco apenas receba mensagens de erro crítico, e não desperdice espaço em disco com mensagens de informação ou alertas.
+
+Nós estávamos usando a exchange do tipo `Fanout`, a qual não nos dá muita flexibilidade - ela é apenas capaz de fazer uma transmissão "pouco esperta".
+
+Ao invés disso, iremos usar uma *exchange* `Direct`. O algoritmo de roteamento por trás de uma *exchange* desse tipo é simples - uma mensagem vai para a fila onde o `binding key` corresponde exatamente ao `routing key` da mensagem.
+
+Para ilustrar isso, considere a seguinte configuração:
+
+![Queue](.github/tutorial-4-01.png)
+
+Nessa configuração, podemos ver a *exchange* `Direct` chamada `X` com duas filas vinculadas à ela. A primeira fila está vinculada com um *binding key* `orange`, e a segunda tem dois *bindings*: um com o *binding key* `black` e outra com `green`.
+
+Dessa forma, uma mensagem publicada para a *exchange* com uma *routing key* `orange` será roteada para a fila `Q1`. Mensagens com *routing key* `black` ou `green` irão para a fila `Q2`. Todas as outras mensagens serão descartadas.
+
+### Multiple bindings
+
+![Queue](.github/tutorial-4-02.png)
+
+É perfeitamente legal se vincular à múltiplas filas com o mesmo *binding key*. Em nosso exemplo, nós poderíamos criar vínculos entre `X` e `Q1` com o *binding key* `black`. Neste caso, a *exchange* `Direct` se comportará como uma `Fanout` e irá transmitir a mensagem para todas as filas correspondentes. Uma mensagem com o *routing key* `black` será entregue tanto para `Q1` quanto para `Q2`.
+
+### Emitting logs
+
+Iremos usar este modelo para nosso sistema de *log*. Ao invés de uma `Fanout` iremos enviar mensagens para uma *exchange* `Direct`. Iremos fornecer a severidade do *log* como `routing key`. Desta forma, o `Consumer` poderá selecionar a severidade que deseja receber.
+
+Como sempre, precisamos primeiro criar uma *exchange*:
+
+```csharp
+channel.ExchangeDeclare(exchange: "direct_logs", type: "direct");
+```
+
+E agora estamos prontos para enviar uma mensagem:
+
+```csharp
+var body = Encoding.UTF8.GetBytes(message);
+
+channel.BasicPublish(exchange: "direct_logs",
+                     routingKey: severity,
+                     basicProperties: null,
+                     body: body);
+```
+
+Para simplificar as coisas, iremos assumir que a `severity` poderá ser uma das seguintes: `info`, `warning` ou `error`.
+
+### Subscribing
+
+Receber mensagens irá funcionar como no tutorial anterior, com uma diferença - iremos criar um novo vínculo para cada severidade na qual estamos interessados.
+
+```csharp
+var queueName = channel.QueueDeclare().QueueName;
+
+foreach(var severity in args)
+{
+    channel.QueueBind(queue: queueName,
+                      exchange: "direct_logs",
+                      routingKey: severity);
+}
+```
+
+### Executando os projetos
+
+![Queue](.github/tutorial-4-03.png)
+
+- `Tutorial.RabbitMQ.Console.EmitLogDirect`: console para transmitir mensagens a uma *Exchange* com *routing key* especificado em forma de severidade do *log*;
+
+- `Tutorial.RabbitMQ.Console.ReceiveLogsDirect`: console para receber mensagens de uma *Exchange*, vinculado à uma ou mais *routing key*;
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Se você quer salvar em arquivo apenas as mensagens de *log* de `warning` e `error`, utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsDirect
+dotnet run warning error > logs_from_rabbit.log
+```
+
+Se você quer ver os logs na tela, através de um novo terminal utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsDirect
+dotnet run info warning error
+```
+
+E, por exemplo, para gerar os *logs* de `error` utilize o comando:
+
+```bash
+cd Tutorial.RabbitMQ.Console.EmitLogDirect
+dotnet run error "Run. Run. Or it will explode."
+```
+
+No próximo tutorial veremos como escutar por mensagens baseadas em um modelo.
+
+
+## Tutorial 5 » Topics
+
+- [ ] `TODO: Documentar`
+
+
+## Tutorial 6 » RPC
+
+- [ ] `TODO: Documentar`
+
+
+## Tutorial 7 » Publisher Confirms
+
+- [ ] `TODO: Documentar`
+
+
+## Estudo adicional
+
+### Testes de carga básica
+
+- [ ] `TODO: Documentar`
+
+### Limite da fila
+
+- [ ] `TODO: Documentar`
 
 
 ## Licença
