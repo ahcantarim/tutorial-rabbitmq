@@ -611,7 +611,98 @@ No próximo tutorial veremos como escutar por mensagens baseadas em um modelo.
 
 ## Tutorial 5 » Topics
 
-- [ ] `TODO: Documentar`
+No tutorial anterior nós melhoramos nosso sistema de *logs*. Ao invés de utilizar uma *exchange* `Fanout` capaz de apenas espalhar as mensagens, nós utilizamos uma `Direct`e ganhamos a possibilidade de receber os *logs* de forma seletiva.
+
+Apesar disso, ainda temos limitações - nossa *exchange* não pode rotear as mensagens baseadas em critérios múltiplos.
+
+Em nosso sistema de *log*, nós podemos querer subscrever não apenas baseado na severidade da mensagem, mas também baseado na fonte que emitiu o *log*. Você pode conhecer esse conceito da ferramenta *unix syslog*, a qual roteia os *logs* baseado tanto na severidade (`info`, `warn`, `crit`, ...) e facilidade (`auth`, `cron`, `kern`, ...).
+
+Isso poderia nos dar muito mais flexibilidade - nós podemos querer escutar apenas os erros críticos vindo do `cron`, mas também todos os *logs* vindos do `kern`.
+
+Para implementar isso em nosso sistema de *logs*, nós precisamos aprender sobre uma *exchange* um pouco mais complexa: `Topic`.
+
+### Topic exchange
+
+Mensagens enviadas a uma *exchange* `Topic` não podem ter um `routing key` arbitrário - ele *deve ser* uma lista de palavras, separadas por ponto. As palavras podem ser qualquer coisa, mas comumente elas especificam algumas funcionalidades conectadas à mensagem. Alguns exemplos de *routing key* válidos: `stock.usd.nyse`, `nyse.vmw`, `quick.orange.rabbit`. Também podem existir quantas palavras você quiser no *routing key*, desde que ele seja limitado a 255 bytes.
+
+O *binding key* precisa também estar no mesmo formato. A lógica por trás de uma *exchange* `Topic` é parecida com uma `Direct` - uma mensagem enviada com um *routing key* específico será entregue para todas as filas que estão vinculadas com um *binding key* correspondente. Entretanto há dois casos especiais para os *binding keys*:
+
+- `*` (asteriscos) podem ser substitudos para exatamente uma palavra.
+- `#` (sustenidos) podem ser substitutos para nenhuma ou mais palavras.
+
+É mais fácil explicar isso em um exemplo:
+
+![Queue](.github/tutorial-5-01.png)
+
+Neste exemplo, iremos enviar mensagens onde todas elas descrevem animais. As mensagens serão enviadas com um *routing key* que consiste de três palavras (e dois pontos para separação). A primeira palavra no *routing key* irá descrever a Velocidade, a segunda a Cor e a terceira a Espécie: `{velocidade}.{cor}.{espécie}`.
+
+Criamos três vínculos: `Q1` está vinculada com o *binding key* `*.laranja.*` e `Q2` com `*.*.coelho` e `lento.#`.
+
+Esses vínculos podem ser resumidos como:
+
+- `Q1` está interessada em todos os animais laranjas.
+- `Q2` quer escutar tudo sobre coelhos, e tudo sobre animais lentos.
+
+Uma mensagem com um *routing key* `rápido.laranja.coelho` será entregue para as duas filas. A mensagem `lento.laranja.elefante` também irá para ambas. Por outro lado, `rápido.laranja.raposa` irá apenas para a primeira fila, e `lento.marrom.raposa` irá apenas para a segunda fila. `lento.rosa.coelho` será entregue para a  segunda fila apenas uma vez, mesmo que corresponda a dois vínculos. `rápido.marrom.raposa` não corresponde a nenhum vínculo então será descartada.
+
+O que acontece se nós quebrarmos o contrato e enviar uma mensagem com uma ou quatro palavras, como `laranja` ou `rápido.laranja.macho.coelho`? Bem, essas mensagens não correspondem a nenhum vínculo e serão perdidas.
+
+Por outro lado, `lento.laranja.macho.coelho`, mesmo que tenha quatro palavras, irá corresponder ao último vínculo e será entregue à segunda fila.
+
+> NOTA SOBRE TOPIC EXCHANGE
+> 
+> Esse tipo de *exchange* é poderosa e pode se comportar como outras *exchanges*.
+> 
+> Quando uma fila é vinculada com `#` (sustenido) no *binding key* ela irá receber todas as mensagens, independentemente do *routing key* - como uma *exchange* `Fanout`.
+> 
+> Quando os caracteres especiais `*` (asterisco) e `#` (sustenido) não são usados nos vínculos, a *exchange* `Topic` irá se comportar da mesma forma que uma `Direct`.
+
+### Executando os projetos
+
+- `Tutorial.RabbitMQ.Console.EmitLogTopic`: console para transmitir mensagens a uma *Exchange* com *routing key* assumidos como tendo duas palavras: `facilidade.severidade`;
+
+- `Tutorial.RabbitMQ.Console.ReceiveLogsTopic`: console para receber mensagens de uma *Exchange*, especificando o vínculo para o *routing key*;
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Para receber todos os *logs*, utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsTopic
+dotnet run "#"
+```
+
+Para receber todos os *logs* da facilidade `kern`:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsTopic
+dotnet run "kern.*"
+```
+
+Ou se você quiser ouvir apenas sobre `critical` *logs*:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsTopic
+dotnet run "*.critical"
+```
+
+Você também pode criar múltiplos vínculos:
+
+```bash
+cd Tutorial.RabbitMQ.Console.ReceiveLogsTopic
+dotnet run "kern.*" "*.critical"
+```
+
+E para gerar um *log* com o *routing key* `kern.critical`, por exemplo, utilize o comando:
+
+```bash
+cd Tutorial.RabbitMQ.Console.EmitLogTopic
+dotnet run "kern.critical" "A critical kernel error."
+```
+
+Divirta-se brincando com esses programas. Note que o código não assume nada sobre os *routing* ou *binding keys*, você pode querer fazer algo com mais de dois parâmetros no *routing key*.
+
+No próximo tutorial, vamos descobrir como fazer uma mensagem de ida e volta, como uma chamada de procedimento remoto (RPC).
 
 
 ## Tutorial 6 » RPC
