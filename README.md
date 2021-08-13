@@ -38,68 +38,78 @@
         <ul>
             <li><a href="#pré-requisitos">Pré-requisitos</a></li>
             <li><a href="#clonando-o-repositório">Clonando o repositório</a></li>
-            <li><a href="#">Instalando as dependências</a></li>
+            <li><a href="#instalando-as-dependências">Instalando as dependências</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Introdução</a>
+        <a href="#introdução">Introdução</a>
         <ul>
-            <li><a href="#">Conectando aplicações no servidor do RabbitMQ</a></li>
-            <li><a href="#">Declarando uma fila</a></li>
-            <li><a href="#">Enviando mensagens</a></li>
-            <li><a href="#">Recebendo mensagens</a></li>
+            <li><a href="#conectando-aplicações-no-servidor-do-rabbitmq">Conectando aplicações no servidor do RabbitMQ</a></li>
+            <li><a href="#declarando-uma-fila">Declarando uma fila</a></li>
+            <li><a href="#enviando-mensagens">Enviando mensagens</a></li>
+            <li><a href="#recebendo-mensagens">Recebendo mensagens</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 1 » "Hello World!"</a>
+        <a href="#tutorial-1--hello-world">Tutorial 1 » "Hello World!"</a>
         <ul>
-            <li><a href="#">Executando os projetos</a></li>
+            <li><a href="#sending">Sending</a></li>
+            <li><a href="#receiving">Receiving</a></li>
+            <li><a href="#executando-os-projetos">Executando os projetos</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 2 » Work queues</a>
+        <a href="#tutorial-2--work-queues">Tutorial 2 » Work queues</a>
         <ul>
-            <li><a href="#">Manual message acknowledgments (ack)</a></li>
-            <li><a href="#">Message durability</a></li>
-            <li><a href="#">Fair Dispatch</a></li>
-            <li><a href="#">Executando os projetos</a></li>
+            <li><a href="#manual-message-acknowledgments-ack">Manual message acknowledgments (ack)</a></li>
+            <li><a href="#message-durability">Message durability</a></li>
+            <li><a href="#fair-dispatch">Fair Dispatch</a></li>
+            <li><a href="#executando-os-projetos-1">Executando os projetos</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 3 » Publish/Subscribe</a>
+        <a href="#tutorial-3--publishsubscribe">Tutorial 3 » Publish/Subscribe</a>
         <ul>
-            <li><a href="#">Exchanges</a></li>
-            <li><a href="#">Temporary queues</a></li>
-            <li><a href="#">Bindings</a></li>
-            <li><a href="#">Executando os projetos</a></li>
+            <li><a href="#exchanges">Exchanges</a></li>
+            <li><a href="#temporary-queues">Temporary queues</a></li>
+            <li><a href="#bindings">Bindings</a></li>
+            <li><a href="#executando-os-projetos-2">Executando os projetos</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 4 » Routing</a>
+        <a href="#tutorial-4--routing">Tutorial 4 » Routing</a>
         <ul>
-            <li><a href="#">Direct exchange</a></li>
-            <li><a href="#">Multiple bindings</a></li>
-            <li><a href="#">Emitting logs</a></li>
-            <li><a href="#">Subscribing</a></li>
-            <li><a href="#">Executando os projetos</a></li>
+            <li><a href="#direct-exchange">Direct exchange</a></li>
+            <li><a href="#multiple-bindings">Multiple bindings</a></li>
+            <li><a href="#emitting-logs">Emitting logs</a></li>
+            <li><a href="#subscribing">Subscribing</a></li>
+            <li><a href="#executando-os-projetos-3">Executando os projetos</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 5 » Topics</a>
+        <a href="#tutorial-5--topics">Tutorial 5 » Topics</a>
+        <ul>
+            <li><a href="#topic-exchange">Topic exchange</a></li>
+            <li><a href="#executando-os-projetos-4">Executando os projetos</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#tutorial-6--rpc">Tutorial 6 » RPC</a>
+        <ul>
+            <li><a href="#">#</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#tutorial-7--publisher-confirms">Tutorial 7 » Publisher Confirms</a>
         <ul>
             <li><a href="#">#</a></li>
         </ul>
     </li>
     <li>
-        <a href="#">Tutorial 6 » RPC</a>
+        <a href="#estudo-adicional">Estudo adicional</a>
         <ul>
-            <li><a href="#">#</a></li>
-        </ul>
-    </li>
-    <li>
-        <a href="#">Tutorial 7 » Publisher Confirms</a>
-        <ul>
-            <li><a href="#">#</a></li>
+            <li><a href="#testes-de-carga-básica">Testes de carga básica</a></li>
+            <li><a href="#limite-da-fila">Limite da fila</a></li>
         </ul>
     </li>
     <li><a href="#licença">Licença</a></li>
@@ -294,7 +304,7 @@ No próximo tutorial iremos criar uma simples fila de trabalho.
 
 [Work Queues (aka: Task Queues)](https://www.rabbitmq.com/tutorials/tutorial-two-dotnet.html)
 
-Foi criada uma `fila de trabalho` que é usada para distribuir tarefas que consomem tempo através de múltiplos `Consumers`.
+Foi criada uma `fila de trabalho` que é usada para distribuir tarefas demoradas através de múltiplos `Consumers`.
 
 Como não temos uma tarefa do mundo real para executar, como redimensionar imagens ou gerar arquivos PDF, simulamos algo nesse sentido através a função `Thread.Sleep()`. Consideramos o número de `.` na cadeia de caracteres enviada como sua complexidade: cada `.` contará como um segundo de "trabalho". Por exemplo, uma tarefa descrita por `Hello...` demorará 3 segundos para ser finalizada.
 
@@ -707,12 +717,120 @@ No próximo tutorial, vamos descobrir como fazer uma mensagem de ida e volta, co
 
 ## Tutorial 6 » RPC
 
-- [ ] `TODO: Documentar`
+No segundo tutorial, nós aprendemos como usar *filas de trabalho* para distribuir tarefas demoradas entre vários *workers*.
+
+Mas e se nós precisarmos executar uma função em um computador remoto (servidor) e aguardar o resultado? Bem, essa é uma história diferente. Este padrão é comumente conhecido como *Remote Procedure Call* ou *RPC*.
+
+Nesse tutorial nós vamos usar o **RabbitMQ** para criar um sistema RPC: um Cliente e um Servidor RPC escalável. Como não temos nenhuma tarefa demorada que valha a pena distribuir, vamos criar um serviço RPC fictício que retorna os números de Fibonacci.
+
+### Client interface
+
+Para ilustrar como um serviço RPC poderia ser usado, nós vamos criar uma simples classe cliente. Ela vai expor um método chamado `Call` que irá enviar uma requisição RPC e bloquear até a resposta ser recebida.
+
+```csharp
+var rpcClient = new RPCClient();
+
+Console.WriteLine(" [x] Requesting fib(30)");
+var response = rpcClient.Call("30");
+Console.WriteLine(" [.] Got '{0}'", response);
+
+rpcClient.Close();
+```
+
+### Callback queue
+
+No geral, fazer RPC através do **RabbitMQ** é fácil. Um cliente envia uma mensagem de requisição e o servidor responde com uma mensagem de resposta. Para receber uma resposta, precisamos enviar um endereço de fila de *callback* com a requisição:
+
+```csharp
+var props = channel.CreateBasicProperties();
+props.ReplyTo = replyQueueName;
+
+var messageBytes = Encoding.UTF8.GetBytes(message);
+channel.BasicPublish(exchange: "",
+                     routingKey: "rpc_queue",
+                     basicProperties: props,
+                     body: messageBytes);
+
+// ... then code to read a response message from the callback_queue ...
+```
+
+
+> **Propriedades das mensagens**
+> 
+> O protocolo AMQP 0-9-1 pré-define um conjunto de 14 propriedades que vão junto com uma mensagem. A maioria das propriedades são raramente usadas, com exceção das seguintes:
+> 
+> - `Persistent`: Marca uma mensagem como persistente (com o valor de `true`) or passageira (com qualquer outro valor). Veja o segundo tutorial.
+> - `DeliveryMode`: aqueles familiares com o protocolo podem escolher usar essa propriedade ao invés de `Persistent`. Elas controlam a mesma coisa.
+> - `ContentType`: Usado para descrever o mime-type da codificação. Por exemplo, para a codificação JSON frequentemente usada, é uma boa prática setar essa propriedade para `application/json`.
+> - `ReplyTo`: Comumente usado para nomear uma fila de *callback*.
+> - `CorrelationId`: Útil para correlacionar respostas RPC com as requisições.
+
+
+### Correlation Id
+
+No método apresentado acima nós sugerimos criar uma fila de *callback* para cada requisição RPC. Isso é bem ineficiente, mas felizmente há uma maneira melhor - vamos criar uma única fila de *callback* por cliente.
+
+Isso levanta um novo problema, tendo recebido uma resposta naquela fila não está claro a qual requisição a mesma pertence. É quando a propriedade `CorrelationId` é usada. Vamos defini-la com um valor único para cada requisição. Mais tarde, quando recebemos uma mensagem na fila de *callback*, nós olharemos para essa propriedade, e baseado nela poderemos corresponder a resposta com a requisição. Se nós vermos um valor de `CorrelationId` desconhecido, podemos seguramente descartar a mensagem - ela não perterce às nossas requisições.
+
+Você pode perguntar, por que nós deveríamos ignorar as mensagens desconhecidas na fila de *callback*, ao invés de falhar com um erro? É devido a possibilidade de uma condição de corrida no lado do servidor. Embora improvável, é possível que o servidor RPC morra logo após nos enviar a resposta, mas antes de enviar uma mensagem de confirmação para a requisição. Se isso acontecer, o servidor RPC reiniciado processará a requisição novamente. É por isso que no cliente devemos lidar com as respostas duplicadas normalmente, e o RPC deve ser idealmente idempotente.
+
+### Resumo
+
+![Queue](.github/tutorial-6-01.png)
+
+Nosso RPC funcionará dessa forma:
+
+- Quando o Cliente é inicializado, ele cria uma fila anônima exclusiva de *callback*.
+- Para uma requisição RPC, o Cliente envia uma mensagem com duas propriedades: `ReplyTo`, que é definido para a fila de *callback* e `CorrelationId`, que é definido com um valor exclusivo para cada requisição.
+- A requisição é enviada para a fila `rpc_queue`.
+- O *worker* RPC (Servidor) está esperando por solicitações nessa fila. Quando uma solicitação aparece, ele realiza o trabalho e envia uma mensagem com o resultado de volta para o Cliente, usando a fila da propriedade `ReplyTo`.
+- O Cliente espera por dados na fila de *callback*. Quando uma mensagem aparece, ele verifica a propriedade `CorrelationId`. Se corresponder ao valor da requisição, ele retornará a resposta para a aplicação.
+
+### Executando os projetos
+
+- `Tutorial.RabbitMQ.Console.RPCClient`: console ???
+
+- `Tutorial.RabbitMQ.Console.RPCServer`: console ???
+
+Você pode executar os projetos pelo `Visual Studio`, pelos executáveis gerados no diretório `bin`, ou através da linha de comando. Para o último caso, abra dois terminais.
+
+Para iniciar o servidor RPC, utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.RPCServer
+dotnet run
+```
+
+Para requisitar um número de Fibonacci, utilize o comando abaixo:
+
+```bash
+cd Tutorial.RabbitMQ.Console.RPCClient
+dotnet run
+```
+
+- [ ] TODO: Finalizar documentação
 
 
 ## Tutorial 7 » Publisher Confirms
 
-- [ ] `TODO: Documentar`
+Confirmações de publicação são uma extensão do **RabbitMQ** para implementar uma publicação confiável. Quando as confirmações de publicação estão habilitadas em um canal, as mensagens que um cliente publica são confirmadas de forma assíncrona pelo *broker*, o que significa que foram atendidas no lado do servidor.
+
+Nesse tutorial vamos usar as confirmações de publicação para ter certeza que as mensagens chegaram com segurança ao *broker*. Cobriremos várias estratégias para usar as confirmações e explicaremos seus prós e contras.
+
+### Enabling Publisher Confirms on a Channel
+
+As confirmações de publicação são uma extensão do **RabbitMQ** ao protocolo AMQP 0.9.1, então elas não estão habilitadas por padrão. Elas são habilitadas a nível de canal com o método `ConfirmSelect`:
+
+```csharp
+var channel = connection.CreateModel();
+channel.ConfirmSelect();
+```
+
+Esse método deve ser chamado em cada canal que você espera que tenha confirmações de publicação. As confirmações devem ser habilitadas apenas uma vez, e não para cada mensagem publicada.
+
+### Strategy #1: Publishing Messages Individually
+
+- [ ] TODO: Documentar
 
 
 ## Estudo adicional
